@@ -20,8 +20,6 @@ class HelpMod(loader.Module):
                "mod_tmpl": '\n‣<a>{}</a>',
                "first_cmd_tmpl": "⋮( {}",
                "cmd_tmpl": " | {}",
-               
-    @loader.unrestricted
     async def helpcmd(self, message):
         """.help [module]"""
         args = utils.get_args_raw(message)
@@ -80,8 +78,7 @@ class HelpMod(loader.Module):
                             reply += self.strings("cmd_tmpl", message).format(cmd)
                     reply += " )"
         
-        await utils.answer(message, reply)
-@loader.unrestricted      
+        await utils.answer(message, reply)      
     async def client_ready(self, client, db):
         self.client = client
         self.is_bot = await client.is_bot()
