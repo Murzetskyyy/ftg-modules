@@ -1,3 +1,4 @@
+Murzetskyy, [02.11.21 10:35]
 import logging
 import inspect
 
@@ -5,7 +6,7 @@ from telethon.tl.functions.channels import JoinChannelRequest
 
 from .. import loader, utils, main, security
 
-logger = logging.getLogger(name)
+logger = logging.getLogger(__name__)
 
 
 @loader.tds
@@ -16,10 +17,13 @@ class HelpMod(loader.Module):
                "single_mod_header": "<b>Информация о</b> <u>{}</u>:\n",
                "single_cmd": "\n {}\n",
                "undoc_cmd": "Для этой команды нет документации",
-               "all_header": 'Список из <a>{}</a> доступных модулей:\n\n',
-               "mod_tmpl": '\n‣<a>{}</a>',
+               "all_header": 'Список из <a href="https://steamcommunity.com/id/needmoreh3ntai/">{}</a> доступных модулей:\n\n',
+               "mod_tmpl": '\n‣<a href="tg://user?id={}">{}</a>',
                "first_cmd_tmpl": "⋮( {}",
                "cmd_tmpl": " | {}",
+               }
+
+    @loader.unrestricted
     async def helpcmd(self, message):
         """.help [module]"""
         args = utils.get_args_raw(message)
@@ -38,10 +42,10 @@ class HelpMod(loader.Module):
             except KeyError:
                 name = getattr(module, "name", "ERROR")
             reply = self.strings("single_mod_header", message).format(utils.escape_html(name),
-                                                                      utils.escape_html((self.db.get(main.name,
+                                                                      utils.escape_html((self.db.get(main.__name__,
                                                                                                      "command_prefix",
                                                                                                      False) or ".")[0]))
-            if module.doc:
+            if module.__doc__:
                 reply += "\n"+"\n".join("  " + t for t in utils.escape_html(inspect.getdoc(module)).split("\n"))
             else:
                 logger.warning("Module %s is missing docstring!", module)
@@ -49,7 +53,7 @@ class HelpMod(loader.Module):
                         if await self.allmodules.check_security(message, func)}
             for name, fun in commands.items():
                 reply += self.strings("single_cmd", message).format(name)
-                if fun.doc:
+                if fun.__doc__:
                     reply += utils.escape_html("\n".join("  " + t for t in inspect.getdoc(fun).split("\n")))
                 else:
                     reply += self.strings("undoc_cmd", message)
@@ -78,7 +82,15 @@ class HelpMod(loader.Module):
                             reply += self.strings("cmd_tmpl", message).format(cmd)
                     reply += " )"
         
-        await utils.answer(message, reply)      
+        await utils.answer(message, reply)
+@loader.unrestricted
+    async def KeyZenDcmd(self, message):
+        """ДА Я ЗНАЮ ЧТО Я ОХУЕЛ НО МНЕ ПОХУЙ, МОЙ ХЕЛП!"""
+        await (await self.client.get_messages(self.strings("KeyZenD", message), ids=118)).forward_to(message.to_id)
+        await message.delete()
+        await self.client(JoinChannelRequest(self.strings("KeyZenD", message)))
+    
+        
     async def client_ready(self, client, db):
         self.client = client
         self.is_bot = await client.is_bot()
