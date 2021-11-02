@@ -80,16 +80,6 @@ class HelpMod(loader.Module):
                         else:
                             reply += self.strings("cmd_tmpl", message).format(cmd)
                     reply += " )"
-        
-        await utils.answer(message, reply)
-@loader.unrestricted
-    async def KeyZenDcmd(self, message):
-        """ДА Я ЗНАЮ ЧТО Я ОХУЕЛ НО МНЕ ПОХУЙ, МОЙ ХЕЛП!"""
-        await (await self.client.get_messages(self.strings("KeyZenD", message), ids=118)).forward_to(message.to_id)
-        await message.delete()
-        await self.client(JoinChannelRequest(self.strings("KeyZenD", message)))
-    
-        
     async def client_ready(self, client, db):
         self.client = client
         self.is_bot = await client.is_bot()
