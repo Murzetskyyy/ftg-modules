@@ -16,7 +16,7 @@ class HelpMod(loader.Module):
                "single_mod_header": "<b>Информация о</b> <u>{}</u>:\n",
                "single_cmd": "\n {}\n",
                "undoc_cmd": "Для этой команды нет документации",
-               "all_header": 'Список из <a href="">{}</a> доступных модулей:\n\n',
+               "all_header": 'Список из <a>{}</a> доступных модулей:\n\n',
                "mod_tmpl": '\n‣<a>{}</a>',
                "first_cmd_tmpl": "⋮( {}",
                "cmd_tmpl": " | {}",
