@@ -47,7 +47,7 @@ class QuotesMod(loader.Module):
                               "$text\" or \"$reply $text\""),
         "updating": "<b>Updating...</b>",
         "update_error": "<b>Update error</b>",
-        "processing": "<b>Извинись...быдло</b>",
+        "processing": "<b>Извинись, быдло...</b>",
         "unreachable_error": "<b>API хост не доступен. Будешь без цитат.</b>",
         "server_error": "<b>Ошибка API :)</b>",
         "no_reply": "<b>Отвечать на сообщение!</b>",
