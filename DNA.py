@@ -1,14 +1,9 @@
-# requires: pillow
-# requires: wand
 from .. import loader, utils
 import io
 from telethon.tl.types import DocumentAttributeFilename
 import logging
 from wand.image import Image
 from PIL import Image as IM
-# https://t.me/KeyZenD
-# https://t.me/govnocodules
-# https://t.me/DneZyeK
 logger = logging.getLogger(__name__)
 
 def register(cb):
