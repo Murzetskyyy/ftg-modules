@@ -47,9 +47,8 @@ class AvaMod(loader.Module):
         photo = await client.download_media(message=reply.photo)
         up = await client.upload_file(photo)
         m = await utils.answer(m, self.strings('installing'))
-        client(UploadProfilePhotoRequest(file=file))
-        await client(functions.photos.UploadProfilePhotoRequest(file=photo))
-
+        await client(functions.photos.UploadProfilePhotoRequest(up))
+        await utils.answer(m, self.strings('ok'))
         os.remove(photo)
 
     async def delavacmd(self, m: types.Message):
