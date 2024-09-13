@@ -1,5 +1,6 @@
 # Admin Tools for Friendly-Telegram UserBot.
 # Copyright (C) 2020 @Fl1yd, @AtiksX.
+# Translation to Ukrainian by @Murzetskyy
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -351,111 +352,7 @@ class AdminToolsMod(loader.Module):
         if not args and not reply:
             return await utils.answer(message, self.strings('no_args_or_reply', message))
 
-        await utils.answer(message, self.strings('deleting', message))
-
-        if args:
-            user = await message.client.get_entity(args)
-        if reply:
-            user = await message.client.get_entity(reply.sender_id)
-
-        await message.client(DeleteUserHistoryRequest(message.to_id, user.id))
-        await message.client.send_message(message.to_id, self.strings('deleted', message).format(user.first_name))
-        await message.delete() 
-
-
-    async def deluserscmd(self, message):
-        """Команда .delusers показывает список всех удалённых аккаунтов в чате.\nИспользование: .delusers <clean>."""
-        if message.is_private:
-            return await utils.answer(message, self.strings('this_isn`t_a_chat', message))
-
-        con = utils.get_args_raw(message)
-        del_u = 0
-        del_status = '<b>Нет удалённых аккаунтов, чат очищен.</b>'
-
-        if con != "clean":
-            await utils.answer(message, self.strings('del_u_search', message))
-            async for user in message.client.iter_participants(message.chat_id):
-                if user.deleted:
-                    del_u += 1
-            if del_u == 1:
-                del_status = f"<b>Найден {del_u} удаленный аккаунт в чате, очистите их с помощью </b><code>.delusers clean</code><b>.</b>"
-            if del_u > 0:
-                del_status = f"<b>Найдено {del_u} удаленных аккаунтов в чате, очистите их с помощью </b><code>.delusers clean</code><b>.</b>"
-            return await message.edit(del_status)
-
-        chat = await message.get_chat()
-        if not chat.admin_rights and not chat.creator:
-            return await utils.answer(message, self.strings('not_admin', message))
-        else:
-            if chat.admin_rights.ban_users == False:
-                return await utils.answer(message, self.strings('no_rights', message))
-
-        await utils.answer(message, self.strings('del_u_kicking', message))
-        del_u = 0
-        del_a = 0
-        async for user in message.client.iter_participants(message.chat_id):
-            if user.deleted:
-                try:
-                    await message.client(EditBannedRequest(message.chat_id, user.id, BANNED_RIGHTS))
-                except UserAdminInvalidError:
-                    del_u -= 1
-                    del_a += 1
-                await message.client(EditBannedRequest(message.chat_id, user.id, UNBAN_RIGHTS))
-                del_u += 1
-        if del_u == 1:
-            del_status = f"<b>Кикнутий {del_u} видалений аккаунт.</b>"
-        if del_u > 0:
-            del_status = f"<b>Кикнуто {del_u} видалених аккаунтов.</b>"
-
-        if del_a == 1:
-            del_status = f"<b>Кикнут {del_u} видалений аккаунт.\n" \
-                            f"{del_a} видаленний акаунт адміна не кікнут.</b>"
-        if del_a > 0:
-            del_status = f"<b>Кикнуто {del_u} видалених аккаунтів.\n" \
-                            f"{del_a} видалених аккаунтів адмінів не кікнуті.</b>"
-        await message.edit(del_status)
-
-
-def resizepic(reply):
-    im = Image.open(io.BytesIO(reply))
-    w, h = im.size
-    x = min(w, h)
-    x_ = (w-x)//2
-    y_ = (h-x)//2
-    _x = x_ + x
-    _y = y_ + x
-    im = im.crop(( x_, y_, _x, _y ))
-    out = io.BytesIO()
-    out.name = "outsuder.png"
-    im.save(out)
-    return out.getvalue()
-
-async def check_media(message, reply):
-    if reply and reply.media:
-        if reply.photo:
-            data = reply.photo
-        elif reply.video:
-            data = reply.video
-        elif reply.document:
-            if reply.gif or reply.audio or reply.voice:
-                return None
-            data = reply.media.document
-        else:
-            return None
-    else:
-        return None
-    if not data or data is None:
-        return None
-    else:
-        data = await message.client.download_file(data, bytes)
-        try:
-            Image.open(io.BytesIO(data))
-            return data
-        except:
-            return None
-
-
-    async def unbancmd(self, message):
+            async def unbancmd(self, message):
         """Команда .unban для разбана пользователя.\nИспользование: .unban <@ или реплай>."""
         if not message.is_private:
             try:
