@@ -73,8 +73,8 @@ class AdminToolsMod(loader.Module):
     strings = {'name': 'AdminTools',
                'no_reply': '<b>Немає реплаю на картинку/стікер.</b>',
                'not_pic': '<b>Це не картинка/стікер</b>',
-               'wait': '<b>Хвилиночкуу...</b>',
-               'pic_so_small': '<b>Картинка слишком маленькая, попробуйте другую.</b>',
+               'wait': '<b>Хвилиночку...</b>',
+               'pic_so_small': '<b>Картинка занадто маленька, спробуйте іншу.</b>',
                'pic_changed': '<b>Ава чату змінена.</b>',
                'promote_none': '<b>Нікому давати адмінку.</b>',
                'who': '<b>Хто це?</b>',
@@ -109,14 +109,14 @@ class AdminToolsMod(loader.Module):
                'unmuted': '<b>З {} знято мут.</b>',
                'no_reply': '<b>Нема реплаю.</b>',
                'deleting': '<b>Видалення...</b>',
-               'no_args_or_reply':'<b>Нет аргументов или реплая.</b>',
-               'deleted': '<b>Все сообщения от {} удалены.</b>',
+               'no_args_or_reply':'<b>Нема аргументів або реплая.</b>',
+               'deleted': '<b>Всі повідомлення від {} видалені.</b>',
                'del_u_search': '<b>Пошук видаленних аккаунтів...</b>',
                'del_u_kicking': '<b>Кик видаленних аккаунтів...\nОх~, я можу це зробити?!</b>'}
 
 
     async def ecpcmd(self, message):
-        """Команда .ecp изменяет картинку чата.\nИспользование: .ecp <реплай на картинку/стикер>."""
+        """Команда .ecp изменяет картинку чата.\nВикористання: .ecp <реплай на картинку/стикер>."""
         if message.chat:
             try:
                 reply = await message.get_reply_message()
@@ -148,7 +148,7 @@ class AdminToolsMod(loader.Module):
 
 
     async def promotecmd(self, message):
-        """Команда .promote повышает пользователя в правах администратора.\nИспользование: .promote <@ или реплай> <ранг>."""
+        """Команда .promote дає адмінку.\nВикористання: .promote <@ або реплай> <ранг>."""
         if message.chat:
             try:
                 args = utils.get_args_raw(message).split(' ')
@@ -186,7 +186,7 @@ class AdminToolsMod(loader.Module):
 
 
     async def demotecmd(self, message):
-        """Команда .demote понижает пользователя в правах администратора.\nИспользование: .demote <@ или реплай>."""
+        """Команда .demote понижает пользователя в правах администратора.\nВикористання: .demote <@ або реплай>."""
         if not message.is_private:
             try:
                 reply = await message.get_reply_message()
@@ -219,7 +219,7 @@ class AdminToolsMod(loader.Module):
 
 
     async def pincmd(self, message):
-        """Команда .pin закрепляет сообщение в чате.\nИспользование: .pin <реплай>."""
+        """Команда .pin закріплює повідомленя у чаті.\nВикористання: .pin <реплай>."""
         if not message.is_private:
             reply = await message.get_reply_message()
             if not reply:
@@ -236,7 +236,7 @@ class AdminToolsMod(loader.Module):
 
 
     async def unpincmd(self, message):
-        """Команда .unpin открепляет закрепленное сообщение в чате.\nИспользование: .unpin."""
+        """Команда .unpin открепляет закрепленное сообщение в чате.\nВикористання: .unpin."""
         if not message.is_private:
             await utils.answer(message, self.strings('unpinning', message))
             
@@ -250,7 +250,7 @@ class AdminToolsMod(loader.Module):
 
 
     async def kickcmd(self, message):
-        """Команда .kick кикает пользователя.\nИспользование: .kick <@ или реплай>."""
+        """Команда .kick кикает пользователя.\nВикористання: .kick <@ або реплай>."""
         if not message.is_private:
             try:
                 args = utils.get_args_raw(message).split(' ')
@@ -297,7 +297,7 @@ class AdminToolsMod(loader.Module):
 
 
     async def bancmd(self, message):
-        """Команда .ban даёт бан пользователю.\nИспользование: .ban <@ или реплай>."""
+        """Команда .ban даёт бан пользователю.\nВикористання: .ban <@ або реплай>."""
         if not message.is_private:
             try:
                 args = utils.get_args_raw(message).split(' ')
@@ -339,21 +339,10 @@ class AdminToolsMod(loader.Module):
                 return await utils.answer(message, self.strings('no_args', message))
         else:
             return await utils.answer(message, self.strings('this_isn`t_a_chat', message))
-               if not message.is_private:
-            chat = await message.get_chat()
-            if not chat.admin_rights and not chat.creator:
-                return await message.edit("<b>Я не админ здесь.</b>")
-            else:
-                if chat.admin_rights.delete_messages == False:
-                    return await message.edit("<b>У меня нет нужных прав.</b>")
 
-        args = utils.get_args_raw(message)
-        reply = await message.get_reply_message()
-        if not args and not reply:
-            return await utils.answer(message, self.strings('no_args_or_reply', message))
 
-            async def unbancmd(self, message):
-        """Команда .unban для разбана пользователя.\nИспользование: .unban <@ или реплай>."""
+    async def unbancmd(self, message):
+        """Команда .unban для разбана пользователя.\nВикористання: .unban <@ або реплай>."""
         if not message.is_private:
             try:
                 reply = await message.get_reply_message() 
@@ -382,7 +371,7 @@ class AdminToolsMod(loader.Module):
 
 
     async def mutecmd(self, message):
-        """Команда .mute даёт мут пользователю.\nИспользование: .mute <@ или реплай> <время (1m, 1h, 1d)>; ничего."""
+        """Команда .mute дає мут користувачу.\nВикористання: .mute <@ або реплай> <время (1m, 1h, 1d)>; ничего."""
         if not message.is_private:
             args = utils.get_args_raw(message).split()
             reply = await message.get_reply_message()
@@ -451,7 +440,7 @@ class AdminToolsMod(loader.Module):
 
 
     async def unmutecmd(self, message):
-        """Команда .unmute для размута пользователя.\nИспользование: .unmute <@ или реплай>."""
+        """Команда .unmute для зняття муту у користувача.\nВикористання: .unmute <@ або реплай>."""
         if not message.is_private:
             try:
                 reply = await message.get_reply_message() 
@@ -480,14 +469,14 @@ class AdminToolsMod(loader.Module):
 
 
     async def delallmsgscmd(self, message):
-        """Команда .delallmsgs удаляет все сообщения от пользователя.\nИспользование: .delallmsgs <@ или реплай>."""
+        """Команда .delallmsgs видаляє усі повідомлення від користувача.\nВикористання: .delallmsgs <@ або реплай>."""
         if not message.is_private:
             chat = await message.get_chat()
             if not chat.admin_rights and not chat.creator:
-                return await message.edit("<b>Я не админ здесь.</b>")
+                return await message.edit("<b>Я не адмін тут.</b>")
             else:
                 if chat.admin_rights.delete_messages == False:
-                    return await message.edit("<b>У меня нет нужных прав.</b>")
+                    return await message.edit("<b>У меня нема потрібних прав.</b>")
 
         args = utils.get_args_raw(message)
         reply = await message.get_reply_message()
@@ -507,13 +496,13 @@ class AdminToolsMod(loader.Module):
 
 
     async def deluserscmd(self, message):
-        """Команда .delusers показывает список всех удалённых аккаунтов в чате.\nИспользование: .delusers <clean>."""
+        """Команда .delusers показує список видалених акаунтів у чаті.\nВикористання: .delusers <clean>."""
         if message.is_private:
             return await utils.answer(message, self.strings('this_isn`t_a_chat', message))
 
         con = utils.get_args_raw(message)
         del_u = 0
-        del_status = '<b>Нет удалённых аккаунтов, чат очищен.</b>'
+        del_status = '<b>Нема видалених акаунтів, чат очищено.</b>'
 
         if con != "clean":
             await utils.answer(message, self.strings('del_u_search', message))
@@ -521,9 +510,9 @@ class AdminToolsMod(loader.Module):
                 if user.deleted:
                     del_u += 1
             if del_u == 1:
-                del_status = f"<b>Найден {del_u} удаленный аккаунт в чате, очистите их с помощью </b><code>.delusers clean</code><b>.</b>"
+                del_status = f"<b>Знайшов {del_u} видалений акаунт в чаті, для видалення напишіть </b><code>.delusers clean</code><b>.</b>"
             if del_u > 0:
-                del_status = f"<b>Найдено {del_u} удаленных аккаунтов в чате, очистите их с помощью </b><code>.delusers clean</code><b>.</b>"
+                del_status = f"<b>Знайдено {del_u} видалених акаунтів в чаті, для видалення напишіть </b><code>.delusers clean</code><b>.</b>"
             return await message.edit(del_status)
 
         chat = await message.get_chat()
@@ -546,16 +535,16 @@ class AdminToolsMod(loader.Module):
                 await message.client(EditBannedRequest(message.chat_id, user.id, UNBAN_RIGHTS))
                 del_u += 1
         if del_u == 1:
-            del_status = f"<b>Кикнутий {del_u} видалений аккаунт.</b>"
+            del_status = f"<b>Кікнутий {del_u} видалений акаунт.</b>"
         if del_u > 0:
-            del_status = f"<b>Кикнуто {del_u} видалених аккаунтов.</b>"
+            del_status = f"<b>Кікнуто {del_u} видалених акаунтів.</b>"
 
         if del_a == 1:
-            del_status = f"<b>Кикнут {del_u} видалений аккаунт.\n" \
-                            f"{del_a} видаленний акаунт адміна не кікнут.</b>"
+            del_status = f"<b>Кикнут {del_u} видалений акаунт.\n" \
+                            f"{del_a} видалений акаунт адміна не кикнут.</b>"
         if del_a > 0:
-            del_status = f"<b>Кикнуто {del_u} видалених аккаунтів.\n" \
-                            f"{del_a} видалених аккаунтів адмінів не кікнуті.</b>"
+            del_status = f"<b>Кикнуто {del_u} видалених акаунтів.\n" \
+                            f"{del_a} видалений акаунти адмінів не кикнуты.</b>"
         await message.edit(del_status)
 
 
