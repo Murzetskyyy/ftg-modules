@@ -104,7 +104,7 @@ class AdminToolsMod(loader.Module):
                'unbanned': '<b>{} більше не в бані.</b>',
                'mute_none': '<b>Некому давать мут.</b>',
                'muted': '<b>{} теперь в муті на </b>',
-               'no_args': '<b>Невірно вказаны аргументи.</b>',
+               'no_args': '<b>Невірно вказані аргументи.</b>',
                'unmute_none': '<b>Нікого знімати мут.</b>',
                'unmuted': '<b>З {} знято мут.</b>',
                'no_reply': '<b>Нема реплаю.</b>',
@@ -186,7 +186,7 @@ class AdminToolsMod(loader.Module):
 
 
     async def demotecmd(self, message):
-        """Команда .demote понижает пользователя в правах администратора.\nВикористання: .demote <@ або реплай>."""
+        """Команда .demote знімає адмінку у користувача.\nВикористання: .demote <@ або реплай>."""
         if not message.is_private:
             try:
                 reply = await message.get_reply_message()
@@ -250,7 +250,7 @@ class AdminToolsMod(loader.Module):
 
 
     async def kickcmd(self, message):
-        """Команда .kick кикает пользователя.\nВикористання: .kick <@ або реплай>."""
+        """Команда .kick кікає користувача.\nВикористання: .kick <@ або реплай>."""
         if not message.is_private:
             try:
                 args = utils.get_args_raw(message).split(' ')
@@ -297,7 +297,7 @@ class AdminToolsMod(loader.Module):
 
 
     async def bancmd(self, message):
-        """Команда .ban даёт бан пользователю.\nВикористання: .ban <@ або реплай>."""
+        """Команда .ban показує банхамер користувачу.\nВикористання: .ban <@ або реплай>."""
         if not message.is_private:
             try:
                 args = utils.get_args_raw(message).split(' ')
@@ -342,7 +342,7 @@ class AdminToolsMod(loader.Module):
 
 
     async def unbancmd(self, message):
-        """Команда .unban для разбана пользователя.\nВикористання: .unban <@ або реплай>."""
+        """Команда .unban для разбану користувача.\nВикористання: .unban <@ або реплай>."""
         if not message.is_private:
             try:
                 reply = await message.get_reply_message() 
@@ -371,7 +371,7 @@ class AdminToolsMod(loader.Module):
 
 
     async def mutecmd(self, message):
-        """Команда .mute дає мут користувачу.\nВикористання: .mute <@ або реплай> <время (1m, 1h, 1d)>; ничего."""
+        """Команда .mute дає мут користувачу.\nВикористання: .mute <@ або реплай> <час (1m, 1h, 1d)>; нічого."""
         if not message.is_private:
             args = utils.get_args_raw(message).split()
             reply = await message.get_reply_message()
@@ -432,7 +432,7 @@ class AdminToolsMod(loader.Module):
                 try:
                     tm = ChatBannedRights(until_date=True, send_messages=True)
                     await message.client(EditBannedRequest(message.chat_id, user.id, tm))
-                    return await message.edit('<b>{} теперь в муте.</b>'.format(user.first_name))
+                    return await message.edit('<b>{} отримав мут.</b>'.format(user.first_name))
                 except UserAdminInvalidError:
                     return await utils.answer(message, self.strings('no_rights', message))
         else:
