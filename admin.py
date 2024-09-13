@@ -21,7 +21,7 @@ from .. import loader, utils, security
 from PIL import Image
 from telethon.errors import ChatAdminRequiredError, UserAdminInvalidError, PhotoCropSizeSmallError
 from telethon.tl.types import ChatAdminRights, ChatBannedRights
-from telethon.tl.functions.channels import EditAdminRequest, EditBannedRequest, EditPhotoRequest, DeleteUserHistoryRequest
+from telethon.tl.functions.channels import EditAdminRequest, EditBannedRequest, EditPhotoRequest
 from telethon.tl.functions.messages import EditChatAdminRequest
 
 # ================== КОНСТАНТЫ ========================
