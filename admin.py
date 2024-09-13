@@ -97,8 +97,8 @@ class AdminToolsMod(loader.Module):
                'kicked': '<b>{} кикнутий(-а) з чату.</b>',
                'kicked_for_reason': '<b>{} кикнутий(-а) из чату.\nПричина: {}.</b>',
                'banning': '<b>Бан...</b>',
-               'banned': '<b>{} забанен(-а) в чаті.</b>',
-               'banned_for_reason': '<b>{} забанен(-а) у чаті.\nПричина: {}</b>', 
+               'banned': '<b>{} забанений(-а) в чаті.</b>',
+               'banned_for_reason': '<b>{} забанений(-а) у чаті.\nПричина: {}</b>', 
                'ban_none': '<b>Нікому показувати банхамер.</b>',
                'unban_none': '<b>Нікого знімати бан.</b>',
                'unbanned': '<b>{} більше не в бані.</b>',
@@ -116,7 +116,7 @@ class AdminToolsMod(loader.Module):
 
 
     async def ecpcmd(self, message):
-        """Команда .ecp изменяет картинку чата.\nВикористання: .ecp <реплай на картинку/стикер>."""
+        """Команда .ecp змінює аву чату.\nВикористання: .ecp <реплай на картинку/стікер>."""
         if message.chat:
             try:
                 reply = await message.get_reply_message()
