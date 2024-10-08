@@ -1,3 +1,5 @@
+# 08.10.2024 API TURNED OFF MODULE DISCOUNTED AND NO LONGER WORKS #
+
 from requests import head,get
 from urllib.parse import urlsplit as E,parse_qs as H
 import json,io,re
