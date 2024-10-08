@@ -17,7 +17,7 @@ class PurgeMod(loader.Module):
 
     strings = {
         "name": "Purge",
-        "from_where": "<b>Які повідомлення потрібно видалені?</b>",
+        "from_where": "<b>Які повідомлення потрібно видалити?</b>",
         "not_supergroup_bot": "<b>Purges can only take place in supergroups</b>",
         "delete_what": "<b>Яке повідомлення треба видалити?</b>",
     }
