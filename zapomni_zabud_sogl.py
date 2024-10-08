@@ -1,3 +1,5 @@
+# 08.10.2024 HOST TURNED OFF AND MODULE DISCOUNTED AND NO LONGER WORKS #
+
 from .. import loader, utils
 import requests
 from PIL import Image
