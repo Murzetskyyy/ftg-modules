@@ -1,3 +1,5 @@
+# 08.10.2024 HOST TURNED OFF AND MODULE DISCOUNTED AND NO LONGER WORKS #
+
 import io, requests
 from .. import loader, utils
 from random import choice, randint
