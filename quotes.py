@@ -1,3 +1,4 @@
+# 08.10.2024 API TURNED OFF WITH ERROR 502 AND MODULE DISCOUNTED!! #
 import io
 import PIL
 from .. import loader, utils
