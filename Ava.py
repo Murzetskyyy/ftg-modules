@@ -19,7 +19,7 @@ class AvaMod(loader.Module):
         await message.client(
             functions.photos.UploadProfilePhotoRequest(
                 fallback=True,
-                file=await message.client.upload_file(foto),
+                file=await message.client.upload_file(photo=file),
                 )
             )
         await message.edit("Ава встаноалена")
