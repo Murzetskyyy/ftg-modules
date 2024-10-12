@@ -18,7 +18,7 @@ class AvaMod(loader.Module):
         up = await make_square(reply)
         await message.client(
             functions.photos.UploadProfilePhotoRequest(
-                fallback=true
+                fallback=true,
                 file=await message.client.upload_file(up),
                 )
             )
