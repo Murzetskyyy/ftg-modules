@@ -1,57 +1,70 @@
 from telethon import functions, types
 from .. import loader, utils
-import io, os
+import io
 from PIL import Image
+
 def register(cb): cb(AvaMod())
+
 class AvaMod(loader.Module):
-    """Встановлення/видаленнч аватарок через команди"""
+    """Встановлення/видалення аватарок через команди"""
     strings = {'name': 'Ava'}
-    def __init__(self): self.name = self.strings['name']
+
+    def __init__(self):
+        self.name = self.strings['name']
+
     async def client_ready(self, client, db): pass
+
     async def avacmd(self, message):
-        'Встановити аватаркуку <reply to image>'
+        'Встановити аватарку <reply to image>'
         reply = await message.get_reply_message()
-        try: reply.media
-        except: return await message.edit("ALO нема медіа/>?")
-        await message.edit("Качаємо фото")
-        await message.edit("Ставимо аву")
-        up = await make_square(reply)
+        if not reply or not reply.media:
+            return await message.edit("❌ Відповідай на фото.")
+
+        await message.edit("📥 Завантажуємо та обрізаємо фото...")
+        file = await make_square(reply)
+
+        uploaded = await message.client.upload_file(file)
+
+        await message.edit("🖼 Ставимо аватарку...")
         await message.client(
             functions.photos.UploadProfilePhotoRequest(
-                fallback=True,
-                file=await message.client.upload_file(photo=file),
-                )
+                file=uploaded
             )
-        await message.edit("Ава встаноалена")
+        )
+        await message.edit("✅ Аватарку встановлено!")
+
     async def delavacmd(self, message):
         'Видалити активну аватарку'
         ava = await message.client.get_profile_photos('me', limit=1)
-        if len(ava) > 0:
-            await message.edit("Видаляємо аватарку...")
+        if ava:
+            await message.edit("🗑 Видаляємо першу аватарку...")
             await message.client(functions.photos.DeletePhotosRequest(ava))
-            await message.edit("Перша аватарка видадена")
+            await message.edit("✅ Перша аватарка видалена.")
         else:
-            await message.edit("Гей, шкірчний чоловіче!Здається в тебе нема аватарок.")
+            await message.edit("😶 У тебе немає аватарок.")
+
     async def delavascmd(self, message):
         'Видалити усі аватарки'
         ava = await message.client.get_profile_photos('me')
-        if len(ava) > 0:
-            await message.edit("Видаляємо аватарки...")
-            await message.client(functions.photos.DeletePhotosRequest(await message.client.get_profile_photos('me')))
-            await message.edit("Аватарки видалені.")
+        if ava:
+            await message.edit("🗑 Видаляємо всі аватарки...")
+            await message.client(functions.photos.DeletePhotosRequest(ava))
+            await message.edit("✅ Усі аватарки видалені.")
         else:
-            await message.edit("Гей,шкірчний чоловіче! Здається в тебе нема аватарок")
+            await message.edit("😶 У тебе немає аватарок.")
+
 async def make_square(msg):
-    '''not checking input'''
+    """Обрезает фото до квадрата (центрирует)"""
     image = Image.open(io.BytesIO(await msg.download_media(bytes)))
     width, height = image.size
-    # Calculate the upper left and lower right coordinates for the cropped image
-    left = (width - min(width, height)) // 2
-    upper = (height - min(width, height)) // 2
-    right = left + min(width, height)
-    lower = upper + min(width, height)
-    image = image.crop((left, upper, right, lower)).convert("RGB")
-    output_bytes = io.BytesIO()
-    image.save(output_bytes, format='JPEG', quality=100)
-    output_bytes.seek(0)
-    return output_bytes
+
+    # Центрированная обрезка
+    min_dim = min(width, height)
+    left = (width - min_dim) // 2
+    top = (height - min_dim) // 2
+    image = image.crop((left, top, left + min_dim, top + min_dim)).convert("RGB")
+
+    output = io.BytesIO()
+    image.save(output, format='JPEG', quality=100)
+    output.seek(0)
+    return output
