@@ -1,4 +1,5 @@
-from telethon import functions, types
+
+from telethon import functions
 from .. import loader, utils
 import io
 from PIL import Image
@@ -54,17 +55,18 @@ class AvaMod(loader.Module):
             await message.edit("😶 У тебе немає аватарок.")
 
 async def make_square(msg):
-    """Обрезает фото до квадрата (центрирует)"""
+    """Обрезает фото до квадрата, сохраняет как JPEG с именем"""
     image = Image.open(io.BytesIO(await msg.download_media(bytes)))
     width, height = image.size
 
-    # Центрированная обрезка
+    # Центрированная квадратная обрезка
     min_dim = min(width, height)
     left = (width - min_dim) // 2
     top = (height - min_dim) // 2
     image = image.crop((left, top, left + min_dim, top + min_dim)).convert("RGB")
 
     output = io.BytesIO()
-    image.save(output, format='JPEG', quality=100)
+    image.save(output, format='JPEG', quality=95)
+    output.name = "ava.jpg"  # Установка имени файла
     output.seek(0)
     return output
