@@ -1,130 +1,103 @@
 # -*- coding: utf-8 -*-
 
-# Original module by @ftgmodulesbyfl1yd
-# Modified and translated to ukrainian by @Murzetskyy
+# Module author: @ftgmodulesbyfl1yd
+# Ukrainian translate by @Murzetskyy
+
 from .. import loader, utils
-import re
+
 
 @loader.tds
 class FiltersMod(loader.Module):
-    """Розширений фільтр слів (працює зі зашумленням, пунктуацією та посиланнями)"""
+    """Filters module (удаляет сообщения по ключевым словам)"""
 
-    strings = {"name": "Фільтри"}
+    strings = {"name": "Filters"}
 
     async def client_ready(self, client, db):
         self.db = db
 
-    def normalize_text(self, text):
-        """Нормалізує текст: знижує регістр, прибирає пунктуацію, замінює латиницю на кирилицю"""
-        replace_map = {
-    'а': 'а', 'a': 'а', 'A': 'а', '@': 'а', 'à': 'а', 'α': 'а',
-    'е': 'е', 'ё': 'е', 'e': 'е', 'E': 'е', '€': 'е',
-    'о': 'о', '0': 'о', 'O': 'о', 'ο': 'о', 'ө': 'о',
-    'с': 'с', 'c': 'с', 'C': 'с', '¢': 'с',
-    'р': 'р', 'p': 'р', 'P': 'р', '¶': 'р',
-    'у': 'у', 'y': 'у', 'Y': 'у', 'υ': 'у',
-    'к': 'к', 'k': 'к', 'K': 'к', 'κ': 'к', 'ꚍ': 'к',
-    'х': 'х', 'x': 'х', 'X': 'х', 'χ': 'х',
-    'т': 'т', 't': 'т', 'T': 'т', 'τ': 'т', '†': 'т',
-    'н': 'н', 'h': 'н', 'H': 'н', 'н': 'н',
-    'в': 'в', 'b': 'в', 'B': 'в', 'β': 'в',
-    'м': 'м', 'm': 'м', 'M': 'м',
-    'п': 'п', 'n': 'п', 'π': 'п',
-    'и': 'и', 'u': 'и', 'ι': 'и', 'ı': 'и',
-    'л': 'л', 'l': 'л', 'L': 'л',
-    'г': 'г', 'r': 'г', 'R': 'г',
-    'д': 'д', 'ð': 'д',
-    'з': 'з', '3': 'з',
-    'ч': 'ч', '4': 'ч',
-    'ж': 'ж',
-    'б': 'б', '6': 'б',
-    'я': 'я', 'q': 'я',
-    'і': 'и', 'ї': 'и', '1': 'и', '|': 'и'
-}
-        text = text.lower()
-        text = re.sub(r"[^\w\s]", "", text)  # прибираємо пунктуацію
-        return "".join(replace_map.get(c, c) for c in text)
-
     async def filtercmd(self, message):
-        """Додає фільтр. Використання: .filter слово"""
+        """Додає фільтр в список. Використання: .filter ключ [у відповіді]"""
         filters = self.db.get("Filters", "filters", {})
         key = utils.get_args_raw(message).lower()
+        reply = await message.get_reply_message()
         chatid = str(message.chat_id)
 
-        if not key:
-            return await message.edit("<b>Немає аргументу.</b>")
+        if not key and not reply:
+            return await message.edit("<b>Нема аргументів або відповіді.</b>")
 
         if chatid not in filters:
-            filters[chatid] = {}
+            filters.setdefault(chatid, {})
 
         if key in filters[chatid]:
-            return await message.edit("<b>Такий фільтр вже існує.</b>")
+            return await message.edit("<b>Такий фільтр слів вже існує.</b>")
 
-        filters[chatid][key] = True
+        # Просто сохраняем ключ, без привязки к сообщению
+        filters[chatid].setdefault(key, True)
         self.db.set("Filters", "filters", filters)
-        await message.edit(f'<b>Фільтр "{key}" додано.</b>')
+        await message.edit(f'<b>Фільтр "{key}" збережено!</b>')
 
     async def stopcmd(self, message):
-        """Видаляє фільтр. Використання: .stop слово"""
+        """Видаляє фільтр зі списку. Використання: .stop ключ"""
         filters = self.db.get("Filters", "filters", {})
         args = utils.get_args_raw(message)
         chatid = str(message.chat_id)
 
-        if chatid not in filters or not args:
-            return await message.edit("<b>Фільтр відсутній або аргумент не задано.</b>")
+        if chatid not in filters:
+            return await message.edit("<b>Нема фільтрів в цьому чаті.</b>")
 
-        if args in filters[chatid]:
+        if not args:
+            return await message.edit("<b>Нема аргументів.</b>")
+
+        try:
             filters[chatid].pop(args)
             self.db.set("Filters", "filters", filters)
-            await message.edit(f'<b>Фільтр "{args}" видалено.</b>')
-        else:
-            await message.edit(f'<b>Фільтр "{args}" не знайдено.</b>')
+            await message.edit(f'<b>Фільтр "{args}" видаленно з списку фільтрів чату!</b>')
+        except KeyError:
+            return await message.edit(f'<b>Нема "{args}" такого фільтру.</b>')
 
     async def stopallcmd(self, message):
-        """Видаляє всі фільтри в чаті"""
+        """Очищає список фільтрів для чату"""
         filters = self.db.get("Filters", "filters", {})
         chatid = str(message.chat_id)
 
-        if chatid in filters:
-            filters.pop(chatid)
-            self.db.set("Filters", "filters", filters)
-            await message.edit("<b>Усі фільтри видалено.</b>")
-        else:
-            await message.edit("<b>Фільтрів немає.</b>")
+        if chatid not in filters:
+            return await message.edit("<b>Нема фільтрів в цьому чаті.</b>")
+
+        filters.pop(chatid)
+        self.db.set("Filters", "filters", filters)
+        await message.edit("<b>Усі фільтри були видалені з списку фільтрів цього чату!</b>")
 
     async def filterscmd(self, message):
-        """Показує список фільтрів"""
+        """Показує збережені фільтри"""
         filters = self.db.get("Filters", "filters", {})
         chatid = str(message.chat_id)
 
-        if chatid not in filters or not filters[chatid]:
-            return await message.edit("<b>Фільтри відсутні.</b>")
+        if chatid not in filters:
+            return await message.edit("<b>Нема фільтрів в цьому чаті.</b>")
 
-        msg = "\n".join([f"• {f}" for f in filters[chatid]])
-        await message.edit(f"<b>Фільтри в цьому чаті ({len(filters[chatid])}):\n\n{msg}</b>")
+        msg = ""
+        for _ in filters[chatid]:
+            msg += f"<b>• {_}</b>\n"
+        await message.edit(
+            f"<b>Список фільтрів в цьому чаті: {len(filters[chatid])}\n\n{msg}</b>"
+        )
 
     async def watcher(self, message):
         try:
             filters = self.db.get("Filters", "filters", {})
             chatid = str(message.chat_id)
-            if chatid not in filters or not message:
+            m = message.text.lower()
+            if chatid not in filters:
                 return
 
-            # Отримання тексту повідомлення
-            full_text = message.raw_text or ""
-            norm_text = self.normalize_text(full_text)
-
-            # Перевірка тексту в клікабельних посиланнях
-            if hasattr(message, "entities") and message.entities:
-                for ent in message.entities:
-                    if ent.type == "text_link":
-                        link_text = full_text[ent.offset: ent.offset + ent.length]
-                        norm_text += " " + self.normalize_text(link_text)
-
-            # Перевірка кожного фільтру
-            for f in filters[chatid]:
-                if self.normalize_text(f) in norm_text:
-                    await message.delete()
-                    break
+            for _ in filters[chatid]:
+                if len(_.split()) == 1:
+                    if _ in m.split():
+                        await message.delete()
+                        break
+                else:
+                    if _ in m:
+                        await message.delete()
+                        break
         except Exception as e:
-            print(f"[FiltersMod] Помилка у watcher: {e}")
+            print(f"Watcher error: {e}")
