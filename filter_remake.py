@@ -89,4 +89,5 @@ class FiltersMod(loader.Module):
 
         filters[chatid].pop(key)
         self.db.set("Filters", "filters", filters)
-        await message.edit(f'Фільтр "{args}"
+        await message.edit(f'Фільтр "{args}" не знайдено.')
+
