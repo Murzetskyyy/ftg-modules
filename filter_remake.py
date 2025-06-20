@@ -64,7 +64,7 @@ class FiltersMod(loader.Module):
 
         filters[chatid][key] = True
         self.db.set("Filters", "filters", filters)
-        await message.edit(f'<b>✅ Фільтр "{key}" додано.</b>')
+        await message.edit(f'<b>Фільтр "{key}" додано.</b>')
 
     async def stopcmd(self, message):
         """Видаляє фільтр. Використання: .stop слово"""
@@ -73,14 +73,14 @@ class FiltersMod(loader.Module):
         chatid = str(message.chat_id)
 
         if chatid not in filters or not key:
-            return await message.edit("<b>❌ Немає такого фільтру.</b>")
+            return await message.edit("<b>Немає такого фільтру.</b>")
 
         if key in filters[chatid]:
             filters[chatid].pop(key)
             self.db.set("Filters", "filters", filters)
-            await message.edit(f'<b>🗑 Фільтр "{key}" видалено.</b>')
+            await message.edit(f'<b>Фільтр "{key}" видалено.</b>')
         else:
-            await message.edit(f'<b>❌ Фільтр "{key}" не знайдено.</b>')
+            await message.edit(f'<b>Фільтр "{key}" не знайдено.</b>')
 
     async def stopallcmd(self, message):
         """Видаляє усі фільтри з чату"""
@@ -90,9 +90,9 @@ class FiltersMod(loader.Module):
         if chatid in filters:
             filters.pop(chatid)
             self.db.set("Filters", "filters", filters)
-            await message.edit("<b>🧹 Усі фільтри видалено.</b>")
+            await message.edit("<b>Усі фільтри видалено.</b>")
         else:
-            await message.edit("<b>📭 У цьому чаті немає фільтрів.</b>")
+            await message.edit("<b>У цьому чаті немає фільтрів.</b>")
 
     async def filterscmd(self, message):
         """Показує список фільтрів"""
@@ -100,10 +100,10 @@ class FiltersMod(loader.Module):
         chatid = str(message.chat_id)
 
         if chatid not in filters or not filters[chatid]:
-            return await message.edit("<b>📭 Немає фільтрів.</b>")
+            return await message.edit("<b>Немає фільтрів.</b>")
 
         msg = "\n".join(f"• {k}" for k in filters[chatid])
-        await message.edit(f"<b>📌 Фільтри:\n\n{msg}</b>")
+        await message.edit(f"<b>Фільтри:\n\n{msg}</b>")
 
     async def watcher(self, message):
         try:
